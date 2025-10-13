@@ -45,7 +45,6 @@ export default class App {
       // Get mouse position
       const mousePos = e.global
       if (e.button === 0) {
-        // This is where the error appears - 
         const bullet = new Bullet(this.shooter.x, this.shooter.y, mousePos.x, mousePos.y);
         console.log("Shooting bullet towards:", mousePos.x, mousePos.y, bullet);
         bullets.push(bullet);
@@ -55,6 +54,7 @@ export default class App {
       }
     });
         // Update bullets in the game loop
+        // This is where the error appears - inside the update function, the bullet's sprite is undefined and has no 'x' value
     this.app.ticker.add(() => {
           bullets.forEach((b) => b.update());
         });
