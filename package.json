@@ -1,0 +1,22 @@
+{
+  "name": "space-shooter",
+  "version": "1.0.0",
+  "description": "JS Game dev task - Space Shooter mini game",
+  "type": "module",
+  "main": "dist/bundle.js",
+  "scripts": {
+    "start": "npm run build && npx serve dist",
+    "build": "webpack",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "html-webpack-plugin": "^5.6.0",
+    "jest": "^29.7.0",
+    "webpack": "^5.95.0",
+    "webpack-cli": "^5.1.4"
+  },
+  "dependencies": {
+    "@pixi/devtools": "^2.0.1",
+    "pixi.js": "^8.1.0"
+  }
+}
