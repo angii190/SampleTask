@@ -1,13 +1,13 @@
 import * as PIXI from 'pixi.js';
 export class Bullet extends PIXI.Sprite {
-    constructor(startX, startY,angle, speed = 10){
+    constructor(startX, startY, angle, speed = 10) {
         super();
         this.createBullet(startX, startY, angle, speed = 10);
         console.log("Bullet created", this.bullet);
     }
 
     // This method creates and adds the bullet sprite to the stage
-    async createBullet(startX, startY,angle, speed){
+    async createBullet(startX, startY, angle, speed) {
         const texture = await PIXI.Assets.load('src/assets/images/rocket.png');
         this.bullet = new PIXI.Sprite(texture)
         this.bullet.anchor.set(0.5);
@@ -21,7 +21,6 @@ export class Bullet extends PIXI.Sprite {
 
     // This method updates the bullet's position
     update() {
-        console.log("Bullet position:", this.bullet);
         this.bullet.x += this.velocityX;
         this.bullet.y += this.velocityY;
     }

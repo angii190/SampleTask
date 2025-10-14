@@ -18,12 +18,12 @@ export default class App {
   }
 
   // Function to spawn enemies at random intervals
-    spawnEnemies() {
-      this.enemy = new Enemy(this.shooter);
-      this.enemies.push(this.enemy);
-      this.app.stage.addChild(this.enemy);
-      //this.enemy.rockets.forEach((r) => this.app.stage.addChild(r));
-    }
+  spawnEnemies() {
+    this.enemy = new Enemy(this.shooter);
+    this.enemies.push(this.enemy);
+    this.app.stage.addChild(this.enemy);
+    this.enemy.rockets.forEach((r) => this.app.stage.addChild(r));
+  }
 
   // Initialize the application
   async init() {
@@ -34,22 +34,27 @@ export default class App {
       antialias: this._config.renderer?.antialias ?? true,
       ...this._config.renderer,
     });
+    // Spawn an enemy every 4-8 seconds
+    setInterval(() => {
+      this.spawnEnemies();
+    }, Math.random() * 4000 + 4000);
 
     document.body.appendChild(this.app.canvas);
     // Create game and shooter instances
     this.game = new Game(this._config);
     this.shooter = new Shooter();
     this.app.stage.addChild(this.shooter, this.game);
-    this.app.ticker.add((t) => this.game?.update?.(t))
-
-    
-
-    // Spawn an enemy every 4-8 seconds
-    setInterval(() => {
-      this.spawnEnemies();
-    }, Math.random() * 4000 + 4000);
-
-
+    this.app.ticker.add((t) => {
+      this.game?.update?.(t);
+      bullets.forEach((b) => b.update());
+      this.enemies.forEach((e) => {
+        e.update();
+        e.rockets.forEach((b) => {
+          b.update();
+          this.app.stage.addChild(b);
+        });
+      });
+    });
 
 
     // Set up shooter's rotation to follow mouse movement
@@ -62,7 +67,6 @@ export default class App {
     const bullets = [];
     // Handle mouse clicks for shooting and moving
     this.app.stage.on('mousedown', (e) => {
-      console.log("Mouse down event:", e);
       // Get mouse position
       const mousePos = e.global
       if (e.button === 0) {
@@ -76,14 +80,7 @@ export default class App {
     });
     // Update bullets in the game loop
     // This is where the error appears - inside the update function, the bullet's sprite is undefined and has no 'x' value
-    this.app.ticker.add(() => {
-      this.bullets.forEach((b) => b.update());
-      this.enemies.forEach((e) => {
-    e.update();
-    //e.this.rockets.forEach((r) => r.update());
-  });
 
-    });
 
     window.addEventListener('contextmenu', (e) => e.preventDefault());
 

@@ -1,4 +1,5 @@
 import * as PIXI from 'pixi.js'
+import { Bullet } from './Bullet.js';
 export class Shooter extends PIXI.Sprite {
   constructor() {
     super()
@@ -7,14 +8,16 @@ export class Shooter extends PIXI.Sprite {
   }
   // This method creates and adds the shooter sprite to the game
   async addSprite() {
-    const x = 100
-    const y = 100
+    const x = 400
+    const y = 500
     const texture = await PIXI.Assets.load('src/assets/images/shooter.png')
     this.spaceShooter = new PIXI.Sprite(texture)
     this.spaceShooter.position.set(x, y)
-
-    this.speed = 5;
     this.spaceShooter.anchor.set(0.5)
+    this.bullets = [];
+
+    this.moveTarget = null;
+    this.speed = 4
     this.addChild(this.spaceShooter)
   }
 
@@ -25,6 +28,14 @@ export class Shooter extends PIXI.Sprite {
     const angle = Math.atan2(dy, dx);
     this.spaceShooter.x += Math.cos(angle) * this.speed
     this.spaceShooter.y += Math.sin(angle) * this.speed
+  }
+
+  shooting() {
+    const angle = Math.atan2(y - this.spaceShooter.y, x - this.spaceShooter.x)
+    const bullet = new Bullet(this.spaceShooter.x, this.spaceShooter.y, angle, 2)
+    this.bullets.push(bullet)
+    this.parent.addChild(bullet)
+    return bullet
   }
 
   // This method rotates the shooter to face a target position
