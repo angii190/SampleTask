@@ -3,6 +3,7 @@ import { Application } from "pixi.js";
 import Game from "./game/Game.js";
 import { Shooter } from "./game/Shooter.js";
 import { Bullet } from "./game/Bullet.js";
+import { Enemy } from "./game/Enemy.js";
 
 export default class App {
   constructor(config) {
@@ -11,8 +12,18 @@ export default class App {
     this.game = null;
     this.shooter = null;
     this.bullet = null;
+    this.enemy = null;
     this.bullets = [];
+    this.enemies = [];
   }
+
+  // Function to spawn enemies at random intervals
+    spawnEnemies() {
+      this.enemy = new Enemy(this.shooter);
+      this.enemies.push(this.enemy);
+      this.app.stage.addChild(this.enemy);
+      //this.enemy.rockets.forEach((r) => this.app.stage.addChild(r));
+    }
 
   // Initialize the application
   async init() {
@@ -30,6 +41,16 @@ export default class App {
     this.shooter = new Shooter();
     this.app.stage.addChild(this.shooter, this.game);
     this.app.ticker.add((t) => this.game?.update?.(t))
+
+    
+
+    // Spawn an enemy every 4-8 seconds
+    setInterval(() => {
+      this.spawnEnemies();
+    }, Math.random() * 4000 + 4000);
+
+
+
 
     // Set up shooter's rotation to follow mouse movement
     this.app.stage.eventMode = 'static'; // Enable interaction events
@@ -53,11 +74,16 @@ export default class App {
         this.shooter.moveTo(mousePos.x, mousePos.y);
       }
     });
-        // Update bullets in the game loop
-        // This is where the error appears - inside the update function, the bullet's sprite is undefined and has no 'x' value
+    // Update bullets in the game loop
+    // This is where the error appears - inside the update function, the bullet's sprite is undefined and has no 'x' value
     this.app.ticker.add(() => {
-          bullets.forEach((b) => b.update());
-        });
+      this.bullets.forEach((b) => b.update());
+      this.enemies.forEach((e) => {
+    e.update();
+    //e.this.rockets.forEach((r) => r.update());
+  });
+
+    });
 
     window.addEventListener('contextmenu', (e) => e.preventDefault());
 
