@@ -30,7 +30,7 @@ export class Shooter extends PIXI.Sprite {
     this.spaceShooter.y += Math.sin(angle) * this.speed
   }
 
-  shooting() {
+  shooting(x, y) {
     const angle = Math.atan2(y - this.spaceShooter.y, x - this.spaceShooter.x)
     const bullet = new Bullet(this.spaceShooter.x, this.spaceShooter.y, angle, 2)
     this.bullets.push(bullet)

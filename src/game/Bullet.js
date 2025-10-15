@@ -21,8 +21,11 @@ export class Bullet extends PIXI.Sprite {
 
     // This method updates the bullet's position
     update() {
+        if (this.bullet){
         this.bullet.x += this.velocityX;
         this.bullet.y += this.velocityY;
+        }
+      
     }
 
     // Getter to access the bullet's sprite

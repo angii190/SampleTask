@@ -26,6 +26,7 @@ export class Enemy extends PIXI.Sprite {
     }
 
     moveEnemy() {
+        if (!this.enemy) return;
         const now = performance.now();
         if (now - this.lastSwitchTime > this.switchInterval) {
             this.direction = this.direction === 'left' ? 'right' : 'left';
@@ -45,6 +46,8 @@ export class Enemy extends PIXI.Sprite {
     }
 
     shoot() {
+        if(!this.enemy) return;
+        console.log("Enemy shooting");
         const angle = this.enemy.rotation
         const rocket = new Bullet(this.enemy.x, this.enemy.y, angle, 5)
 
@@ -55,19 +58,22 @@ export class Enemy extends PIXI.Sprite {
 
 
         this.rockets.push(rocket)
-        this.parent.addChild(rocket)
+        this.addChild(rocket)
+        console.log(this.enemy.x, this.enemy.y)
+        return rocket
     }
 
     update() {
         this.moveEnemy();
-        this.rockets.forEach((r) => r.update());
+        this.rockets.forEach((r) => r.update())
 
     }
 
     destroy() {
-        clearInterval(this.shootInterval);
-        this.enemy.destroy();
-        this.rockets.forEach((r) => r.destroy());
+        if (!this.enemy) return
+        clearInterval(this.shootInterval)
+        this.enemy.destroy()
+        this.rockets.forEach((r) => r.destroy())
     }
 
 }
