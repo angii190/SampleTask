@@ -1,52 +1,65 @@
-import * as PIXI from 'pixi.js'
-import { Bullet } from './Bullet.js';
-export class Shooter extends PIXI.Sprite {
-  constructor() {
+import * as PIXI from 'pixi.js';
+import { Rocket } from './Rocket.js';
+
+export class Player extends PIXI.Sprite {
+  constructor(x, y, texture) {
     super()
-    this.addSprite()
-    console.log("Shooter created");
-  }
-  // This method creates and adds the shooter sprite to the game
-  async addSprite() {
-    const x = 400
-    const y = 500
-    const texture = await PIXI.Assets.load('src/assets/images/shooter.png')
-    this.spaceShooter = new PIXI.Sprite(texture)
-    this.spaceShooter.position.set(x, y)
-    this.spaceShooter.anchor.set(0.5)
-    this.bullets = [];
-
-    this.moveTarget = null;
-    this.speed = 4
-    this.addChild(this.spaceShooter)
+    this.target = null
+    this.sprite = new PIXI.Sprite(texture)
+    this.sprite.anchor.set(0.5)
+    this.sprite.x = x
+    this.sprite.y = y
+    this.speed = 5
+    this.rockets = []
+    this.addChild(this.sprite)
   }
 
-  // This method moves the shooter towards a target position
-  moveTo(targetX, targetY) {
-    const dx = targetX - this.spaceShooter.x
-    const dy = targetY - this.spaceShooter.y
-    const angle = Math.atan2(dy, dx);
-    this.spaceShooter.x += Math.cos(angle) * this.speed
-    this.spaceShooter.y += Math.sin(angle) * this.speed
+  angleTo(x1, y1, x2, y2) {
+    return Math.atan2(y2 - y1, x2 - x1)
   }
 
-  shooting(x, y) {
-    const angle = Math.atan2(y - this.spaceShooter.y, x - this.spaceShooter.x)
-    const bullet = new Bullet(this.spaceShooter.x, this.spaceShooter.y, angle, 2)
-    this.bullets.push(bullet)
-    this.parent.addChild(bullet)
-    return bullet
+  update(mousePosition) {
+    if (!this.sprite || !mousePosition) return
+
+    if (this.target) {
+      const dxTarget = this.target.x - this.sprite.x
+      const dyTarget = this.target.y - this.sprite.y
+      const angleToTarget = Math.atan2(dyTarget, dxTarget)
+      this.sprite.rotation = angleToTarget + Math.PI / 2
+      const distance = Math.sqrt(dxTarget * dxTarget + dyTarget * dyTarget)
+
+      if (distance < this.speed) {
+        this.sprite.x = this.target.x
+        this.sprite.y = this.target.y
+        this.target = null
+      } else {
+        this.sprite.x += Math.cos(angleToTarget) * this.speed
+        this.sprite.y += Math.sin(angleToTarget) * this.speed
+      }
+    } else {
+      // If not moving, just rotate to face the mouse
+      const dxCursor = mousePosition.x - this.sprite.x
+      const dyCursor = mousePosition.y - this.sprite.y
+      const angleToCursor = Math.atan2(dyCursor, dxCursor)
+      this.sprite.rotation = angleToCursor + Math.PI / 2
+    }
+
+  }
+  
+  shoot(rocketTexture) {
+    const angle = this.sprite.rotation - Math.PI / 2
+
+    // Convert local position to global
+    const global = this.sprite.getGlobalPosition()
+    const x = global.x
+    const y = global.y
+    const rocket = new Rocket(x, y, angle, false, rocketTexture)
+    this.parent.addChild(rocket)
+    return rocket
   }
 
-  // This method rotates the shooter to face a target position
-  rotateTo(targetX, targetY) {
-    const dx = targetX - this.spaceShooter.x
-    const dy = targetY - this.spaceShooter.y
-    this.spaceShooter.rotation = Math.atan2(dy, dx)
+  moveTo(target) {
+    this.target = { x: target.x, y: target.y }
   }
-  // Getter to access the shooter's sprite
-  get view() {
-    return this.spaceShooter;
-  }
-
 }
+
