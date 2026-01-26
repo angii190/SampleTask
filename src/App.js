@@ -134,8 +134,31 @@ export default class App {
     }
   }
 
+  async loadScoreboard() {
+    const res = await fetch('http://localhost:5500/api/scores')
+    const scores = await res.json()
+    const board = document.createElement('div')
+    board.innerHTML = '<h3>Top Scores</h3>' + scores.map(u => `<p>${u.username}: ${u.highScore}</p>`).join('')
+    document.body.appendChild(board)
+  }
+
+
+
   endGame() {
     this.gameOver = true
+    const token = localStorage.getItem('token')
+    if (token) {
+      fetch('http://localhost:5500/api/scores', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ score: this.score })
+      })
+    }
+    this.loadScoreboard()
+
     const style = new PIXI.TextStyle({
       fontFamily: "Arial Black",
       fontSize: 64,
@@ -187,6 +210,54 @@ export default class App {
     })
 
   }
+  async register() {
+    const username = document.getElementById('username').value
+    const password = document.getElementById('password').value
+    const res = await fetch('http://localhost:5500/api/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    })
+    const data = await res.json()
+    alert(data.message || data.error)
+  }
+
+  async login() {
+  const username = document.getElementById('username').value;
+  const password = document.getElementById('password').value;
+
+  const res = await fetch('http://localhost:5500/api/auth/login', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, password })
+  });
+
+  const data = await res.json();
+  if (data.token) {
+    localStorage.setItem('token', data.token);
+    localStorage.setItem('username', data.user.username);
+    this.showLogoutUI();
+  } else {
+    alert(data.error);
+  }
+}
+
+
+ logout() {
+  localStorage.removeItem('token');
+  localStorage.removeItem('username');
+  document.getElementById('auth').style.display = 'block';
+  document.getElementById('logout').style.display = 'none';
+}
+
+showLogoutUI() {
+  const username = localStorage.getItem('username');
+  document.getElementById('auth').style.display = 'none';
+  document.getElementById('logout').style.display = 'block';
+  document.getElementById('welcome').textContent = `Welcome, ${username}`;
+}
+
+
 
   async preloadAssets() {
     this.rocketTexture = await PIXI.Assets.load('src/assets/images/rocket.png')
@@ -242,6 +313,14 @@ export default class App {
     background.height = this.app.screen.height
     background.zIndex = -1
     this.app.stage.addChild(background)
+
+    const token = localStorage.getItem('token');
+    if (token) {
+      document.getElementById('auth').style.display = 'none';
+      this.showLogoutUI();
+      // Optionally: fetch user info or show welcome message
+    }
+    
     // Game loop
     this.app.ticker.add((delta) => {
       this.game?.update?.(delta); this.update(delta)

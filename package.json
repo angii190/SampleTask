@@ -17,18 +17,24 @@
   },
   "dependencies": {
     "@pixi/devtools": "^2.0.1",
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.6",
+    "dotenv": "^17.2.3",
+    "express": "^5.2.1",
     "gsap": "^3.13.0",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.1.5",
     "pixi.js": "^8.1.0"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/codescreen/CodeScreen_bftekuba.git"
+    "url": "git+https://github.com/angii190/SempleTask.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/codescreen/CodeScreen_bftekuba/issues"
+    "url": "https://github.com/angii190/SempleTask"
   },
-  "homepage": "https://github.com/codescreen/CodeScreen_bftekuba#readme"
+  "homepage": "https://github.com/angii190/SempleTask"
 }

@@ -1,6 +1,34 @@
 <!doctype html>
 <html>
-  <head><meta charset="utf-8"><title>Space Shooter</title></head>
-  <body style="margin:0; background:#000;"></body>
-  <script src="./dist/bundle.js"></script>
+
+<head>
+  <meta charset="utf-8">
+  <title>Space Shooter</title>
+</head>
+
+<body style="margin:0; background:#000;">
+  <div id="auth" style="position: absolute; top: 20px; left: 20px; z-index: 999;">
+    <input id="username" placeholder="Username" />
+    <input id="password" type="password" placeholder="Password" />
+    <button onclick="window.app.register()">Register</button>
+    <button onclick="window.app.login()">Login</button>
+  </div>
+  <div id="logout" style="position: absolute; top: 20px; right: 20px; z-index: 999; display: none;">
+    <span id="welcome" style="margin-right: 10px;"></span>
+    <button onclick="window.app.logout()">Logout</button>
+  </div>
+  <script>
+    const logoutBtn = document.getElementById('logoutBtn');
+    if (logoutBtn) {
+      logoutBtn.addEventListener('click', () => {
+        window.app.logout();
+      });
+    }
+  </script>
+
+
+</body>
+<script src="./dist/bundle.js"></script>
+
+
 </html>
