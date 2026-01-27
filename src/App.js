@@ -138,6 +138,18 @@ export default class App {
     const res = await fetch('http://localhost:5500/api/scores')
     const scores = await res.json()
     const board = document.createElement('div')
+    board.style.position = 'absolute';
+board.style.top = '100px';
+board.style.left = '50%';
+board.style.transform = 'translateX(-50%)';
+board.style.background = 'rgba(0, 0, 0, 0.8)';
+board.style.color = 'white';
+board.style.padding = '20px';
+board.style.borderRadius = '10px';
+board.style.zIndex = 999;
+board.style.textAlign = 'center';
+
+
     board.innerHTML = '<h3>Top Scores</h3>' + scores.map(u => `<p>${u.username}: ${u.highScore}</p>`).join('')
     document.body.appendChild(board)
   }
