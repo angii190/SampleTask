@@ -1,0 +1,109 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Alien Invasion</title>
+  <style>
+    #logout {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      z-index: 999;
+      display: none;
+    }
+  </style>
+</head>
+<body style="margin:0; background:#000;">
+
+<div id="logout" style="position:absolute; top:20px; right:20px; z-index:999; display:none;">
+  <span id="welcome" class="welcome-text"></span>
+
+<style>
+  .welcome-text {
+    font-family: 'Arial Black', sans-serif;
+    font-size: 18px;
+    color: #00eaff;
+    text-shadow: 0 0 8px #00eaff;
+    margin-right: 12px;
+    padding: 6px 12px;
+    background: rgba(0, 0, 0, 0.4);
+    border: 1px solid #00eaff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 234, 255, 0.4);
+  }
+
+</style>
+<script>gsap.from(".welcome-text", {
+  opacity: 0,
+  x: 20,
+  duration: 0.6,
+  ease: "power2.out"
+});
+</script>
+
+
+  <button class="game-button" onclick="logout()">Logout</button>
+</div>
+
+
+<script src="./dist/bundle.js"></script>
+
+<div id="menuBtn" style="position:absolute; top:20px; left:20px; z-index:999;">
+  <button class="game-button" onclick="goToMenu()">Menu</button>
+</div>
+
+
+
+<script>
+function goToMenu() {
+  window.location.href = 'index.html';
+}
+</script>
+
+<style>
+    .game-button {
+  padding: 12px 24px;
+  font-size: 18px;
+  font-family: Arial, sans-serif;
+  color: #fff;
+  background: linear-gradient(135deg, #3a3a3a, #1a1a1a);
+  border: 2px solid #00eaff;
+  border-radius: 8px;
+  cursor: pointer;
+  text-shadow: 0 0 6px #00eaff;
+  box-shadow: 0 0 12px rgba(0, 234, 255, 0.6);
+  transition: 0.2s ease;
+}
+
+.game-button:hover {
+  transform: scale(1.08);
+  box-shadow: 0 0 20px rgba(0, 234, 255, 0.9);
+  border-color: #00ffff;
+}
+
+.game-button:active {
+  transform: scale(0.95);
+}
+</style>
+
+<script>
+function logout() {
+  localStorage.removeItem('token');
+  localStorage.removeItem('username');
+  window.location.href = 'index.html';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const token = localStorage.getItem('token');
+  const logoutDiv = document.getElementById('logout');
+
+  if (token) {
+    logoutDiv.style.display = 'block';
+    document.getElementById('welcome').textContent =
+      'Welcome, ' + localStorage.getItem('username');
+  }
+});
+</script>
+
+</body>
+</html>

@@ -135,24 +135,46 @@ export default class App {
   }
 
   async loadScoreboard() {
-    const res = await fetch('http://localhost:5500/api/scores')
-    const scores = await res.json()
-    const board = document.createElement('div')
-    board.style.position = 'absolute';
-board.style.top = '100px';
-board.style.left = '50%';
-board.style.transform = 'translateX(-50%)';
-board.style.background = 'rgba(0, 0, 0, 0.8)';
-board.style.color = 'white';
-board.style.padding = '20px';
-board.style.borderRadius = '10px';
-board.style.zIndex = 999;
-board.style.textAlign = 'center';
+  const res = await fetch('http://localhost:5500/api/scores');
+  const scores = await res.json();
 
+  // Remove old scoreboard if it exists
+  const old = document.getElementById('scoreboard');
+  if (old) old.remove();
 
-    board.innerHTML = '<h3>Top Scores</h3>' + scores.map(u => `<p>${u.username}: ${u.highScore}</p>`).join('')
-    document.body.appendChild(board)
-  }
+  const board = document.createElement('div');
+  board.id = 'scoreboard';
+
+  board.style.position = 'absolute';
+  board.style.top = '30%';
+  board.style.left = '50%';
+  board.style.transform = 'translate(-50%, -50%) scale(0.5)';
+  board.style.background = 'rgba(0, 0, 0, 0.85)';
+  board.style.color = 'white';
+  board.style.padding = '30px 40px';
+  board.style.borderRadius = '15px';
+  board.style.boxShadow = '0 0 25px rgba(255,255,255,0.3)';
+  board.style.zIndex = 999;
+  board.style.textAlign = 'center';
+  board.style.fontFamily = 'Arial, sans-serif';
+  board.style.opacity = 0;
+
+  let html = `<h2 style="margin-top:0; font-size:32px;">🏆 Top Scores</h2>`;
+  html += scores
+    .map((u, i) => `<p style="font-size:20px; margin:6px 0;">${i + 1}. ${u.username}: ${u.highScore}</p>`)
+    .join('');
+
+  board.innerHTML = html;
+  document.body.appendChild(board);
+
+  // GSAP animation
+  gsap.to(board, {
+    opacity: 1,
+    scale: 1,
+    duration: 0.8,
+    ease: "back.out(1.7)"
+  });
+}
 
 
 
@@ -169,7 +191,6 @@ board.style.textAlign = 'center';
         body: JSON.stringify({ score: this.score })
       })
     }
-    this.loadScoreboard()
 
     const style = new PIXI.TextStyle({
       fontFamily: "Arial Black",
@@ -220,6 +241,7 @@ board.style.textAlign = 'center';
       yoyo: true,
       ease: "sine.inOut",
     })
+    this.loadScoreboard()
 
   }
   async register() {
@@ -258,13 +280,13 @@ board.style.textAlign = 'center';
  logout() {
   localStorage.removeItem('token');
   localStorage.removeItem('username');
-  document.getElementById('auth').style.display = 'block';
+  //document.getElementById('auth').style.display = 'block';
   document.getElementById('logout').style.display = 'none';
 }
 
 showLogoutUI() {
   const username = localStorage.getItem('username');
-  document.getElementById('auth').style.display = 'none';
+  //document.getElementById('auth').style.display = 'none';
   document.getElementById('logout').style.display = 'block';
   document.getElementById('welcome').textContent = `Welcome, ${username}`;
 }
@@ -328,9 +350,8 @@ showLogoutUI() {
 
     const token = localStorage.getItem('token');
     if (token) {
-      document.getElementById('auth').style.display = 'none';
       this.showLogoutUI();
-      // Optionally: fetch user info or show welcome message
+
     }
     
     // Game loop

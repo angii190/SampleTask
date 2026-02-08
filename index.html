@@ -1,34 +1,36 @@
 <!doctype html>
 <html>
-
 <head>
   <meta charset="utf-8">
-  <title>Space Shooter</title>
-</head>
-
-<body style="margin:0; background:#000;">
-  <div id="auth" style="position: absolute; top: 20px; left: 20px; z-index: 999;">
-    <input id="username" placeholder="Username" />
-    <input id="password" type="password" placeholder="Password" />
-    <button onclick="window.app.register()">Register</button>
-    <button onclick="window.app.login()">Login</button>
-  </div>
-  <div id="logout" style="position: absolute; top: 20px; right: 20px; z-index: 999; display: none;">
-    <span id="welcome" style="margin-right: 10px;"></span>
-    <button onclick="window.app.logout()">Logout</button>
-  </div>
-  <script>
-    const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutBtn) {
-      logoutBtn.addEventListener('click', () => {
-        window.app.logout();
-      });
+  <title>Alien Invasion</title>
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      color: white;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
-  </script>
-
-
+    #container {
+      text-align: center;
+    }
+    button {
+      padding: 15px 30px;
+      font-size: 20px;
+      cursor: pointer;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <h1>🚀 Alien Invasion</h1>
+    <button onclick="window.location.href='login.html'">Login / Register</button>
+    <br><br>
+    <button onclick="window.location.href='game.html'">Play as Guest</button>
+  </div>
 </body>
-<script src="./dist/bundle.js"></script>
-
-
 </html>
