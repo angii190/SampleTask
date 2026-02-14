@@ -135,46 +135,46 @@ export default class App {
   }
 
   async loadScoreboard() {
-  const res = await fetch('http://localhost:5500/api/scores');
-  const scores = await res.json();
+    const res = await fetch('http://localhost:5500/api/scores');
+    const scores = await res.json();
 
-  // Remove old scoreboard if it exists
-  const old = document.getElementById('scoreboard');
-  if (old) old.remove();
+    // Remove old scoreboard if it exists
+    const old = document.getElementById('scoreboard');
+    if (old) old.remove();
 
-  const board = document.createElement('div');
-  board.id = 'scoreboard';
+    const board = document.createElement('div');
+    board.id = 'scoreboard';
 
-  board.style.position = 'absolute';
-  board.style.top = '30%';
-  board.style.left = '50%';
-  board.style.transform = 'translate(-50%, -50%) scale(0.5)';
-  board.style.background = 'rgba(0, 0, 0, 0.85)';
-  board.style.color = 'white';
-  board.style.padding = '30px 40px';
-  board.style.borderRadius = '15px';
-  board.style.boxShadow = '0 0 25px rgba(255,255,255,0.3)';
-  board.style.zIndex = 999;
-  board.style.textAlign = 'center';
-  board.style.fontFamily = 'Arial, sans-serif';
-  board.style.opacity = 0;
+    board.style.position = 'absolute';
+    board.style.top = '30%';
+    board.style.left = '50%';
+    board.style.transform = 'translate(-50%, -50%) scale(0.5)';
+    board.style.background = 'rgba(0, 0, 0, 0.85)';
+    board.style.color = 'white';
+    board.style.padding = '30px 40px';
+    board.style.borderRadius = '15px';
+    board.style.boxShadow = '0 0 25px rgba(255,255,255,0.3)';
+    board.style.zIndex = 999;
+    board.style.textAlign = 'center';
+    board.style.fontFamily = 'Arial, sans-serif';
+    board.style.opacity = 0;
 
-  let html = `<h2 style="margin-top:0; font-size:32px;">🏆 Top Scores</h2>`;
-  html += scores
-    .map((u, i) => `<p style="font-size:20px; margin:6px 0;">${i + 1}. ${u.username}: ${u.highScore}</p>`)
-    .join('');
+    let html = `<h2 style="margin-top:0; font-size:32px;">🏆 Top Scores</h2>`;
+    html += scores
+      .map((u, i) => `<p style="font-size:20px; margin:6px 0;">${i + 1}. ${u.username}: ${u.highScore}</p>`)
+      .join('');
 
-  board.innerHTML = html;
-  document.body.appendChild(board);
+    board.innerHTML = html;
+    document.body.appendChild(board);
 
-  // GSAP animation
-  gsap.to(board, {
-    opacity: 1,
-    scale: 1,
-    duration: 0.8,
-    ease: "back.out(1.7)"
-  });
-}
+    // GSAP animation
+    gsap.to(board, {
+      opacity: 1,
+      scale: 1,
+      duration: 0.8,
+      ease: "back.out(1.7)"
+    });
+  }
 
 
 
@@ -257,39 +257,39 @@ export default class App {
   }
 
   async login() {
-  const username = document.getElementById('username').value;
-  const password = document.getElementById('password').value;
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
 
-  const res = await fetch('http://localhost:5500/api/auth/login', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ username, password })
-  });
+    const res = await fetch('http://localhost:5500/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ username, password })
+    });
 
-  const data = await res.json();
-  if (data.token) {
-    localStorage.setItem('token', data.token);
-    localStorage.setItem('username', data.user.username);
-    this.showLogoutUI();
-  } else {
-    alert(data.error);
+    const data = await res.json();
+    if (data.token) {
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('username', data.user.username);
+      this.showLogoutUI();
+    } else {
+      alert(data.error);
+    }
   }
-}
 
 
- logout() {
-  localStorage.removeItem('token');
-  localStorage.removeItem('username');
-  //document.getElementById('auth').style.display = 'block';
-  document.getElementById('logout').style.display = 'none';
-}
+  logout() {
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
+    //document.getElementById('auth').style.display = 'block';
+    document.getElementById('logout').style.display = 'none';
+  }
 
-showLogoutUI() {
-  const username = localStorage.getItem('username');
-  //document.getElementById('auth').style.display = 'none';
-  document.getElementById('logout').style.display = 'block';
-  document.getElementById('welcome').textContent = `Welcome, ${username}`;
-}
+  showLogoutUI() {
+    const username = localStorage.getItem('username');
+    //document.getElementById('auth').style.display = 'none';
+    document.getElementById('logout').style.display = 'block';
+    document.getElementById('welcome').textContent = `Welcome, ${username}`;
+  }
 
 
 
@@ -320,6 +320,7 @@ showLogoutUI() {
 
   }
 
+
   // Initialize the application
   async init() {
     await this.app.init({
@@ -347,13 +348,20 @@ showLogoutUI() {
     background.height = this.app.screen.height
     background.zIndex = -1
     this.app.stage.addChild(background)
+    window.addEventListener('resize', () => {
+      this.app.renderer.resize(window.innerWidth, window.innerHeight);
+      background.width = this.app.screen.width;
+      background.height = this.app.screen.height;
+    });
+
+
 
     const token = localStorage.getItem('token');
     if (token) {
       this.showLogoutUI();
 
     }
-    
+
     // Game loop
     this.app.ticker.add((delta) => {
       this.game?.update?.(delta); this.update(delta)
